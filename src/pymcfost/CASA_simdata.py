@@ -51,12 +51,12 @@ def pseudo_CASA_simdata(model,i=0,iaz=0,iTrans=None,simu_name = "pseudo_casa",be
             freq = sc.c/model.wl * 1e6
             if pola_needed==False:
                 # Convert to Jy
-                image = Wm2_to_Jy(model.image[0, iaz, i, :, :], freq)
+                image = Wm2_to_Jy(model.image[0, iaz, i, :, :], model.freq)
             else:
                 # Convert to Jy
-                image_I = Wm2_to_Jy(model.image[0, iaz, i, :, :], freq)
-                image_Q = Wm2_to_Jy(model.image[1, iaz, i, :, :], freq)
-                image_U = Wm2_to_Jy(model.image[2, iaz, i, :, :], freq)
+                image_I = Wm2_to_Jy(model.image[0, iaz, i, :, :], model.freq)
+                image_Q = Wm2_to_Jy(model.image[1, iaz, i, :, :], model.freq)
+                image_U = Wm2_to_Jy(model.image[2, iaz, i, :, :], model.freq)
     else:  # cube
         if pola_needed==True:
             raise Exception("ERROR: can only create Q, U fits for images, not cubes")
@@ -162,7 +162,7 @@ def pseudo_CASA_simdata(model,i=0,iaz=0,iTrans=None,simu_name = "pseudo_casa",be
 	    #--  - compute the scale factor in 1 channel once,
 	    #--  - then add noise before spatial and spectral convolution so we do not convolve twice
         if rms > 0.0:
-            noise = np.random.randn(image.size).reshape(img.shape)
+            noise = np.random.randn(img.size).reshape(img.shape)
             if img.ndim == 2:
                 noise = convolve_fft(noise, beam)
             elif img.ndim != 2:
